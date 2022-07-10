@@ -34,8 +34,3 @@ build/
 
 ## PROPERTIES ##
 src/main/resources
-
-## CACHE ##
-.mvn/
-mvnw
-mvnw.cmd
