@@ -49,8 +49,6 @@ public class ProductServiceImpl implements ProductService{
 		this.validateJson(object);
 		Product product = getProduct(id);
 		if(!existsWithNameAndDetail(object.getString("name"), object.getString("detail"))) {
-			product.setDetail(object.getString("detail"));
-			product.setName(object.getString("name"));
 			return new Result(Constants.RESULT_OK, productRepository.save(product));
 		} else
 			throw new Exception(GlobalDefaultExceptionHandler.ERR_PRODUCT_EXISTS.getError_code());

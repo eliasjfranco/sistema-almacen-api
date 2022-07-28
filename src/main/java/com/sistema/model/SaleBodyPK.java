@@ -5,10 +5,10 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class CategoryPK implements Serializable{
+public class SaleBodyPK implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	protected Integer id;
+	protected Long id;
 	protected Integer appId;
 }

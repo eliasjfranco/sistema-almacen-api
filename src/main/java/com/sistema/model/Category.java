@@ -17,15 +17,18 @@ import lombok.Data;
 public class Category {
 	
 	@Id
+	@Column(name = "appid")
+	private Integer appId;
+	
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
-	@Id
 	@Column(name = "nombre")
 	private String name;
 	
 	@Column(name = "id_producto")
-	private Long idProduct;
+	private Long productId;
 	
 }

@@ -2,13 +2,11 @@ package com.sistema.model;
 
 import java.io.Serializable;
 
-import lombok.Data;
-
-@Data
-public class CategoryPK implements Serializable{
+public class UserPK implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	protected Integer id;
+	protected String document;
 	protected Integer appId;
+
 }
