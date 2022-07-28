@@ -13,12 +13,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.sistema.service.impl.UserDetailsServiceImpl;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
 	private JwtEntryPoint entryPoint; 
+	@Autowired
+	private UserDetailsServiceImpl userServiceImpl;
 	
 	@Bean
 	public BCryptPasswordEncoder encoder() {
@@ -32,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(null).passwordEncoder(encoder());
+		auth.userDetailsService(userServiceImpl).passwordEncoder(encoder());
 	}
 	
 	@Bean

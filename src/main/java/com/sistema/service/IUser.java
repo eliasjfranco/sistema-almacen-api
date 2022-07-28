@@ -1,9 +1,14 @@
 package com.sistema.service;
 
+import java.util.Optional;
+
 import com.sistema.model.User;
+import com.sistema.util.Result;
 
 public interface IUser {
 	
-	public User getByEmail(String email);
+	public Optional<User> getByEmail(String email);
+	
+	public Result login(String body) throws Exception;
 
 }

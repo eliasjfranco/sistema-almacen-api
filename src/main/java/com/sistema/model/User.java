@@ -3,6 +3,8 @@ package com.sistema.model;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
@@ -39,7 +42,7 @@ public class User implements UserDetails{
 	private LocalDate birthday;
 	@Column(name = "password")
 	private String password;
-	private String role = "user";
+	private Set<String> role;
 	
 	private Collection<? extends GrantedAuthority> authorities;
 
@@ -57,7 +60,11 @@ public class User implements UserDetails{
 	
 	public static User build(User user) {
 		List<GrantedAuthority> authorities =
-				user.get
+				user.getRole()
+				.stream()
+				.map(rol -> new SimpleGrantedAuthority(rol))
+				.collect(Collectors.toList());
+		return new User(user.getAppId(), user.getFirstname(), user.getLastname(), user.getTel(), user.getEmail(), user.getBirthday(), user.getPassword(),  user.getDocument(), authorities);
 	}
 	
 	@Override
@@ -93,6 +100,14 @@ public class User implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return false;
+	}
+	
+	public void addRole(String r) {
+		role.add("user");
+	}
+	
+	public Set<String> getRole(){
+		return role;
 	}
 	
 	
