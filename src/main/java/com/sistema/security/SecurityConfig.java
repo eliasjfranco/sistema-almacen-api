@@ -30,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 
 	@Override
+	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
@@ -48,18 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
 			.authorizeRequests()
-			.antMatchers("/auth/**").permitAll()
+			.antMatchers(HttpMethod.POST,"/auth/**").permitAll()
 			.anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(entryPoint)
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
 		http.addFilterBefore(authenticationFilterBean(), UsernamePasswordAuthenticationFilter.class);
 	}
-	
-	
-	
-	
-	
-	
 	
 }

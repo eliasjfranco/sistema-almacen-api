@@ -6,24 +6,36 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter @Setter
 @Entity
 @IdClass(UserPK.class)
 @Table(name = "USER")
 public class User implements UserDetails{
 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	long id;
+	
 	@Id
 	@Column(name = "appid")
 	private Integer appId;
@@ -42,8 +54,16 @@ public class User implements UserDetails{
 	private LocalDate birthday;
 	@Column(name = "password")
 	private String password;
-	private Set<String> role;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "user_role",
+			joinColumns = @JoinColumn(
+					name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+					name = "role_id", referencedColumnName = "id"))
+	private Set<Role> role;
 	
+	@Transient
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public User(Integer appId, String firstname, String lastname, String tel, String email, LocalDate birthday, String password, String document, Collection<? extends GrantedAuthority> authorities) {
@@ -62,7 +82,7 @@ public class User implements UserDetails{
 		List<GrantedAuthority> authorities =
 				user.getRole()
 				.stream()
-				.map(rol -> new SimpleGrantedAuthority(rol))
+				.map(rol -> new SimpleGrantedAuthority(rol.getRole().name()))
 				.collect(Collectors.toList());
 		return new User(user.getAppId(), user.getFirstname(), user.getLastname(), user.getTel(), user.getEmail(), user.getBirthday(), user.getPassword(),  user.getDocument(), authorities);
 	}
@@ -100,14 +120,6 @@ public class User implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return false;
-	}
-	
-	public void addRole(String r) {
-		role.add("user");
-	}
-	
-	public Set<String> getRole(){
-		return role;
 	}
 	
 	
